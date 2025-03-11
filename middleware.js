@@ -30,11 +30,15 @@ const aj = arcjet({
 
 // Create base Clerk middleware
 const clerk = clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
+  // 1. First run Arcjet protection
+  const arcjetResponse = await aj.run(req);
+  if (arcjetResponse) return arcjetResponse;
+
+  // 2. Then handle Clerk authentication
+  const { userId } = auth();
 
   if (!userId && isProtectedRoute(req)) {
-    const { redirectToSignIn } = await auth();
-    return redirectToSignIn();
+    return auth().redirectToSignIn();
   }
 
   return NextResponse.next();
