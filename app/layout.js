@@ -11,6 +11,8 @@ export const metadata = {
   description: "One stop Finance Platform",
 };
 
+//
+
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider>
